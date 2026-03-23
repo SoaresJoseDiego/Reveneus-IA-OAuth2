@@ -2,13 +2,21 @@
 using MyRecipeBook.Application.Services.Cryptography;
 using MyRecipeBook.Communications.Requests;
 using MyRecipeBook.Communications.Responses;
+using MyRecipeBook.Domain.Repositories.User;
 using MyRecipeBook.Exceptions.ExceptionsBase;
 
 namespace MyRecipeBook.Application.UseCases.User.Register;
 
 public class RegisterUserUseCase
 {
-    public ResponseRegisteredUserJson Execute(RequestRegisterUserJson request)
+
+    private readonly IUser _user;
+
+    public RegisterUserUseCase(IUser user)
+    {
+        _user = user;
+    }
+    public async Task<ResponseRegisteredUserJson> Execute(RequestRegisterUserJson request)
     {
 
 
@@ -27,7 +35,7 @@ public class RegisterUserUseCase
 
         user.Password = cryptoPassword.Encrypt(request.Password);
 
-        // salvar no banco de dados
+        await _user.Add(user);
 
         return new ResponseRegisteredUserJson
         {
