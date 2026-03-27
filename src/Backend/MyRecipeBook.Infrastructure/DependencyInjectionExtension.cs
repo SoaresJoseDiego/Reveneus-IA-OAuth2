@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using MyRecipeBook.Domain.Repositories;
 using MyRecipeBook.Domain.Repositories.User;
 using MyRecipeBook.Infrastructure.DataAccess;
 using MyRecipeBook.Infrastructure.DataAccess.Repositories;
@@ -16,7 +17,7 @@ public static class DependencyInjectionExtension
 
     private static void AddDbContext_MySqlServer(IServiceCollection services)
     {
-        var connectionString = "Server=127.0.0.1;Port=3306;Database=MyRecipeBook;Uid=root;Pwd=@Diego0323;";
+        var connectionString = "Server=127.0.0.1;Port=3306;Database=MyRecipeBook;Uid=root;Pwd=;";
         var serverVersion = new MySqlServerVersion(new Version(10,4,32));
 
         services.AddDbContext<MyRecipeBookDbContext>(dbContextOptions =>
@@ -28,6 +29,7 @@ public static class DependencyInjectionExtension
 
     private static void AddRepositories(IServiceCollection services)
     {
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IUser, UserRepository>();
     }
 
